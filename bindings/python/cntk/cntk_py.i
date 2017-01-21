@@ -83,7 +83,7 @@
 %ignore CNTK::Internal::IsAutomaticUnpackingOfPackedValuesDisabled;
 %ignore CNTK::Internal::GetComputationNetworkTraceLevel;
 
-%ignore CNTK::Function::Function(const std::vector<Variable>& inputs, const std::vector<Variable>& outputs, Dictionary&& functionConfig, const std::wstring& name = L"", const std::wstring& uid = Internal::GenerateUid(L"UserDefinedFunction"));
+%ignore CNTK::Function::Function(const std::vector<Variable>& inputs, Dictionary&& functionConfig, const std::wstring& name = L"", const std::wstring& uid = Internal::GenerateUid(L"UserDefinedFunction"));
 
 %{
 #define SWIG_FILE_WITH_INIT

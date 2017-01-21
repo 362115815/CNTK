@@ -18,12 +18,13 @@ from cntk.ops.functions import UserFunction
 
 class Plus3Func(UserFunction):
     def __init__(self, arg, name='f1'):
-        outputs = [output_variable(arg.shape, arg.dtype, arg.dynamic_axes)]
-        super(Plus3Func, self).__init__([arg], outputs,
-                name=name)
+        super(Plus3Func, self).__init__([arg], name=name)
 
         self.forward_calls = 0
         self.backward_calls = 0
+
+    def infer_outputs():
+        return [output_variable(inputs[0].shape, inputs[0].dtype, inputs[0].dynamic_axes)]
 
     def forward(self, arguments, outputs, device=None, outputs_to_retain=None):
         assert len(self.inputs)==1
@@ -51,6 +52,7 @@ class Plus3Func(UserFunction):
         variables[var_key] = rv
 
 def test_ext_eval_1():
+    import pdb;pdb.set_trace()
     dim = 4
     p = parameter(shape=(dim,), init=10, name='p')
     i = input_variable(dim, needs_gradient=True, name='i_var')
@@ -149,9 +151,11 @@ def test_ext_backpropstate(payload):
 
     class TestBackPropState(UserFunction):
         def __init__(self, arg, payload, name='f1'):
-            outputs = [output_variable(arg.shape, arg.dtype, arg.dynamic_axes)]
             self.payload = payload
-            super(TestBackPropState, self).__init__([arg], outputs)
+            super(TestBackPropState, self).__init__([arg])
+
+        def infer_outputs():
+            return [output_variable(inputs[0].shape, inputs[0].dtype, inputs[0].dynamic_axes)]
 
         def forward(self, arguments, outputs, device=None, outputs_to_retain=None):
             for k in outputs:
@@ -194,9 +198,10 @@ class LambdaFunc(UserFunction):
             name=''):
         self.when = when
         self.execute = execute
-        outputs = [output_variable(arg.shape, arg.dtype, arg.dynamic_axes)]
-        super(LambdaFunc, self).__init__([arg], outputs,
-                name=name)
+        super(LambdaFunc, self).__init__([arg], name=name)
+
+    def infer_outputs():
+        return [output_variable(inputs[0].shape, inputs[0].dtype, inputs[0].dynamic_axes)]
 
     def forward(self, arguments, outputs, device=None, outputs_to_retain=None):
         if len(arguments)!=1:
